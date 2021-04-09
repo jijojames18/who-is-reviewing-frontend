@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Who is reviewing",
+  "version": "1.0",
+  "description": "Browser extension to show the list of users actively reviewing a pull request.",
+  "author": "Jijo James",
+  "permissions": ["contextMenus"],
+  "background": {
+    "service_worker": "script.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.github.com/*"],
+      "js": ["config.js", "populate.js"],
+      "run_at": "document_start"
+    }
+  ]
+}
