@@ -22,15 +22,15 @@ const EVENT_TYPE_DELETE = "DELETE";
 extensionWindow.runtime.onConnect.addListener(function (port) {
   if (port.name === PORT_NAME) {
     port.onMessage.addListener(function (msg) {
-      const { project, prId, eventType } = msg;
-      const url = `${config.restEndPoint}/${project}/${prId}`;
+      const { project, prId, eventType, endPoint } = msg;
+      const url = `${endPoint}/${project}/${prId}`;
       if (eventType === EVENT_TYPE_GET) {
         fetch(url)
           .then((response) => response.json())
           .then((data) =>
             port.postMessage({
               status: STATUS_OK,
-              userDetails: data,
+              userList: data,
             })
           )
           .catch(() => {
@@ -55,7 +55,7 @@ extensionWindow.runtime.onConnect.addListener(function (port) {
           .then((data) =>
             port.postMessage({
               status: STATUS_OK,
-              userDetails: data,
+              userList: data,
             })
           )
           .catch(() => {
