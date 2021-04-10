@@ -3,6 +3,7 @@
 const PORT_NAME = "who_is_reviewing";
 
 const EVENT_TYPE_GET = "GET";
+const EVENT_TYPE_STATUS_CHANGE = "STATUS_CHANGE";
 
 const STATUS_OK = "OK";
 const STATUS_ERROR = "ERROR";
@@ -14,11 +15,14 @@ const addReviewerList = () => {
   const url = document.URL;
   const splitUrl = url.split("/").reverse();
   if (splitUrl[1] === "pull") {
+    // Execute logic only for PR pages.
     const getReqParams = {
       endPoint: config.restEndPoint,
       project: splitUrl[2],
       prId: splitUrl[0],
     };
+
+    // Connect to service worker to make API calls.
     var port = chrome.runtime.connect({ name: PORT_NAME });
     port.postMessage({ ...getReqParams, eventType: EVENT_TYPE_GET });
     port.onMessage.addListener(function (msg) {
@@ -32,13 +36,15 @@ const addReviewerList = () => {
           "{USER_LIST}",
           userListText
         );
+
+        // Remove any existing elements
         const existingUserListElem = document.querySelectorAll(
           `.${CONTAINER_ELEM_CLASS}`
         );
-        // Remove any existing elements
         if (existingUserListElem.length) {
           existingUserListElem[0].remove();
         }
+
         const containerElem = document.querySelectorAll(CONTAINER_TO_APPEND_TO);
         if (containerElem.length === 1) {
           const userListContainerElem = document.createElement("div");
@@ -53,3 +59,10 @@ const addReviewerList = () => {
 };
 
 addReviewerList();
+
+extensionWindow.runtime.onMessage.addListener(async (eventDetails) => {
+  // Update list when current user toggles status in Popup
+  if (eventDetails.eventType === EVENT_TYPE_STATUS_CHANGE) {
+    addReviewerList();
+  }
+});
