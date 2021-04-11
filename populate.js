@@ -21,6 +21,15 @@ const extensionWindow = (function () {
   }
 })();
 
+// Get login of user
+let userLogin = "";
+const metas = document.getElementsByTagName("meta");
+for (let i = 0; i < metas.length; i++) {
+  if (metas[i].getAttribute("name") === "user-login") {
+    userLogin = metas[i].getAttribute("content");
+  }
+}
+
 const addReviewerList = () => {
   const url = document.URL;
   const splitUrl = url.split("/").reverse();
