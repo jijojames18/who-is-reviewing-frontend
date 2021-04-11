@@ -11,6 +11,16 @@ const STATUS_ERROR = "ERROR";
 const CONTAINER_TO_APPEND_TO = ".js-merge-message-container";
 const CONTAINER_ELEM_CLASS = "who-is-reviewing-user-list";
 
+const extensionWindow = (function () {
+  if (typeof chrome !== undefined) {
+    return chrome;
+  } else if (typeof browser !== undefined) {
+    return browser;
+  } else if (typeof msBrowser !== undefined) {
+    return msBrowser;
+  }
+})();
+
 const addReviewerList = () => {
   const url = document.URL;
   const splitUrl = url.split("/").reverse();
@@ -23,7 +33,7 @@ const addReviewerList = () => {
     };
 
     // Connect to service worker to make API calls.
-    var port = chrome.runtime.connect({ name: PORT_NAME });
+    var port = extensionWindow.runtime.connect({ name: PORT_NAME });
     port.postMessage({ ...getReqParams, eventType: EVENT_TYPE_GET });
     port.onMessage.addListener(function (msg) {
       if (msg.status === STATUS_OK) {
