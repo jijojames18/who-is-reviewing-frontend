@@ -1,0 +1,63 @@
+.toggle-button {
+  display: flex;
+  margin-top: 8px;
+}
+.toggle-button > div {
+  height: 30px;
+  line-height: 30px;
+}
+.toggle-control {
+  display: block;
+  position: relative;
+  padding-left: 50px;
+  margin: 0 8px 16px 8px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.toggle-control input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.toggle-control input:checked ~ .control {
+  background-color: dodgerblue;
+}
+.toggle-control input:checked ~ .control:after {
+  left: 21px;
+}
+.toggle-control .control {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 30px;
+  width: 50px;
+  border-radius: 15px;
+  background-color: darkgray;
+  transition: background-color 0.15s ease-in;
+}
+.toggle-control .control:after {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 28px;
+  height: 28px;
+  border-radius: 15px;
+  background: white;
+  transition: left 0.15s ease-in;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #222229;
+  color: white;
+  min-width: 200px;
+}
