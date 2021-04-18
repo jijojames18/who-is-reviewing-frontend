@@ -74,20 +74,15 @@ if (splitUrl[1] === "pull") {
     var port = extensionWindow.runtime.connect({ name: PORT_NAME });
     port.postMessage(params);
     port.onMessage.addListener(function (msg) {
+      let amIReviewing = false;
+      const key = `${splitUrl[2]}/${splitUrl[0]}`;
       if (msg.status === STATUS_OK) {
         drawReviewerList(msg);
-        const amIReviewing = msg.userList.indexOf(userLogin) >= 0;
-        extensionWindow.runtime.sendMessage({
-          eventType: EVENT_TYPE_STATUS_CHANGE,
-          status: amIReviewing,
-        });
+        amIReviewing = msg.userList.indexOf(userLogin) >= 0;
       } else {
         drawReviewerList([]);
-        extensionWindow.runtime.sendMessage({
-          eventType: EVENT_TYPE_STATUS_CHANGE,
-          status: false,
-        });
       }
+      extensionWindow.storage.sync.set({ [key]: amIReviewing });
     });
   };
 

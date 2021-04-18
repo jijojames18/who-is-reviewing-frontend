@@ -28,8 +28,26 @@ checkbox.addEventListener("change", (event) => {
   chrome.tabs.query(query, callback);
 });
 
-extensionWindow.runtime.onMessage.addListener((event) => {
-  if (event.eventType === EVENT_TYPE_STATUS_CHANGE) {
-    checkbox.checked = event.status;
+extensionWindow.tabs.query(
+  { currentWindow: true, active: true },
+  function (tabs) {
+    const url = tabs[0].url;
+    const splitUrl = url.split("/").reverse();
+    // Execute logic only for PR pages.
+    if (splitUrl[1] === "pull") {
+      const key = `${splitUrl[2]}/${splitUrl[0]}`;
+      chrome.storage.sync.get([key], function (result) {
+        const mainContentElem = document.getElementById("main-content");
+        const fallBackContentElem = document.getElementById("fallback-content");
+        mainContentElem.classList.remove("hidden");
+        fallBackContentElem.classList.add("hidden");
+        checkbox.checked = result[key] || false;
+      });
+    } else {
+      const mainContentElem = document.getElementById("main-content");
+      const fallBackContentElem = document.getElementById("fallback-content");
+      mainContentElem.classList.add("hidden");
+      fallBackContentElem.classList.remove("hidden");
+    }
   }
-});
+);

@@ -4,16 +4,21 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <div class="toggle-message">Are you reviewing this pull request?</div>
-    <div class="toggle-button">
-      <div class="toggle-status-label">No</div>
-      <div class="toggle-button-control">
-        <label class="toggle-control">
-          <input type="checkbox" id="toggle-status" />
-          <span class="control"></span>
-        </label>
+    <div id="main-content" class="hidden">
+      <div class="toggle-message">Are you reviewing this pull request?</div>
+      <div class="toggle-button">
+        <div class="toggle-status-label">No</div>
+        <div class="toggle-button-control">
+          <label class="toggle-control">
+            <input type="checkbox" id="toggle-status" />
+            <span class="control"></span>
+          </label>
+        </div>
+        <div class="toggle-status-label">Yes</div>
       </div>
-      <div class="toggle-status-label">Yes</div>
+    </div>
+    <div id="fallback-content">
+      Navigate to a pull request to enable extension
     </div>
   </body>
   <script src="popup.js"></script>

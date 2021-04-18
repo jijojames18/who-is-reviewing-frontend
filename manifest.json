@@ -4,6 +4,7 @@
   "version": "1.0",
   "description": "Browser extension to show the list of users actively reviewing a pull request.",
   "author": "Jijo James",
+  "permissions": ["tabs", "storage"],
   "background": {
     "service_worker": "script.js"
   },

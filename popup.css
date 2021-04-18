@@ -1,3 +1,12 @@
+#main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.hidden {
+  display: none !important;
+}
 .toggle-button {
   display: flex;
   margin-top: 8px;
@@ -53,10 +62,6 @@
   transition: left 0.15s ease-in;
 }
 body {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   background-color: #222229;
   color: white;
   min-width: 200px;
