@@ -4,3 +4,5 @@ const config = {
     userList: "List of reviewing users : {USER_LIST}",
   },
 };
+
+export default config;
