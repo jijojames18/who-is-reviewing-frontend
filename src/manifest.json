@@ -1,4 +1,5 @@
 {
+  "name": "Who Is Reviewing",
   "manifest_version": 3,
   "permissions": ["tabs", "storage"],
   "background": {

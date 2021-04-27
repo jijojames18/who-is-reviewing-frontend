@@ -36,7 +36,6 @@ var options = {
         transform: function (content) {
           return Buffer.from(
             JSON.stringify({
-              name: process.env.npm_package_name,
               author: process.env.npm_package_author_name,
               description: process.env.npm_package_description,
               version: process.env.npm_package_version,
