@@ -20,9 +20,25 @@ Copy config.sample.js as config.js.
 | restEndPoint | String | Server base URL | http://localhost:8000 |
 | msg | Object | | |
 | msg.userList | String | Message to indicate the list of users reviewing the PR | List of reviewing users : {USER_LIST} |
+| msg.toggleMessage | String | Toggle message used in Popup | Are you reviewing this pull request? |
+| msg.toggleYes | String | Message to indicate I am reviewing this pull request | Yes |
+| msg.toggleNo | String | Message to indicate I am not reviewing this pull request | No |
+| msg.fallbackMessage | String | Message shown in Popup when user is not in an active pull request | Navigate to an open pull request to enable extension |
 
 ### Backend
 Repository : [who-is-reviewing-backend](https://github.com/jijojames18/who-is-reviewing-backend)
+
+### Available Scripts
+
+In the project directory, you can run:
+
+#### `npm run build`
+
+Builds the project into the `build` folder.
+
+#### `npm run dev`
+
+Watches for changes to the `src` folder and builds the project when changes happen.
 
 ### Documentation
 
