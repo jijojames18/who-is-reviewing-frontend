@@ -26,9 +26,12 @@ const hideToggle = () => {
 
 checkbox.addEventListener("change", (event) => {
   const query = { active: true, currentWindow: true };
+  const PRStatus = event.currentTarget.checked
+    ? REVIEW_STARTED
+    : REVIEW_STOPPED;
   function callback(tabs) {
     extensionWindow.tabs.sendMessage(tabs[0].id, {
-      status: event.currentTarget.checked ? REVIEW_STARTED : REVIEW_STOPPED,
+      status: PRStatus,
       eventType: EVENT_TYPE_STATUS_CHANGE,
     });
   }
