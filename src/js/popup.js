@@ -13,6 +13,15 @@ const checkbox = document.getElementById("toggle-status");
 const mainContentElem = document.getElementById("main-content");
 const fallBackContentElem = document.getElementById("fallback-content");
 
+document.getElementsByClassName("toggle-message")[0].textContent =
+  config.msg.toggleMessage;
+document.getElementsByClassName("toggle-status-label-yes")[0].textContent =
+  config.msg.toggleYes;
+document.getElementsByClassName("toggle-status-label-no")[0].textContent =
+  config.msg.toggleNo;
+document.getElementById("fallback-content").textContent =
+  config.msg.fallbackMessage;
+
 const showToggle = (isChecked) => {
   mainContentElem.classList.remove("hidden");
   fallBackContentElem.classList.add("hidden");
