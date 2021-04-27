@@ -72,7 +72,12 @@ if (splitUrl[1] === "pull") {
       } else {
         drawReviewerList([]);
       }
-      extensionWindow.storage.sync.set({ [key]: amIReviewing });
+      extensionWindow.storage.sync.set({
+        [key]: {
+          status: "OPEN",
+          amIReviewing,
+        },
+      });
     });
   };
 

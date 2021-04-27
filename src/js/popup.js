@@ -3,6 +3,7 @@ import {
   EVENT_TYPE_STATUS_CHANGE,
   REVIEW_STARTED,
   REVIEW_STOPPED,
+  PR_OPEN,
 } from "@js/common/constants";
 import config from "@/config";
 import extensionWindow from "@js/common/context";
@@ -54,7 +55,13 @@ extensionWindow.tabs.query(activeWindowQueryParams, function (tabs) {
   // Execute logic only for PR pages.
   if (key) {
     extensionWindow.storage.sync.get([key], function (result) {
-      showToggle(result[key]);
+      const PRStatus = result[key] || {};
+      // Hide popup content for closed pull requests
+      if (PRStatus.status === PR_OPEN) {
+        showToggle(PRStatus.amIReviewing);
+      } else {
+        hideToggle();
+      }
     });
   } else {
     hideToggle();

@@ -12,3 +12,6 @@ export const EVENT_TYPE_STATUS_CHANGE = "STATUS_CHANGE";
 
 export const REVIEW_STARTED = "STARTED";
 export const REVIEW_STOPPED = "STOPPED";
+
+export const PR_OPEN = "OPEN";
+export const PR_CLOSED = "CLOSED";

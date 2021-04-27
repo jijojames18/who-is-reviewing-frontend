@@ -5,7 +5,7 @@ const config = {
     toggleMessage: "Are you reviewing this pull request?",
     toggleYes: "Yes",
     toggleNo: "No",
-    fallbackMessage: "Navigate to a pull request to enable extension",
+    fallbackMessage: "Navigate to an open pull request to enable extension",
   },
 };
 
