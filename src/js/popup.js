@@ -6,6 +6,7 @@ import {
 } from "@js/common/constants";
 import config from "@/config";
 import extensionWindow from "@js/common/context";
+import { getPRPath } from "@js/common/functions";
 
 import "@css/popup.css";
 
@@ -13,14 +14,16 @@ const checkbox = document.getElementById("toggle-status");
 const mainContentElem = document.getElementById("main-content");
 const fallBackContentElem = document.getElementById("fallback-content");
 
+const activeWindowQueryParams = { active: true, currentWindow: true };
+
+// set messages in popup
 document.getElementsByClassName("toggle-message")[0].textContent =
   config.msg.toggleMessage;
 document.getElementsByClassName("toggle-status-label-yes")[0].textContent =
   config.msg.toggleYes;
 document.getElementsByClassName("toggle-status-label-no")[0].textContent =
   config.msg.toggleNo;
-document.getElementById("fallback-content").textContent =
-  config.msg.fallbackMessage;
+fallBackContentElem.textContent = config.msg.fallbackMessage;
 
 const showToggle = (isChecked) => {
   mainContentElem.classList.remove("hidden");
@@ -34,7 +37,6 @@ const hideToggle = () => {
 };
 
 checkbox.addEventListener("change", (event) => {
-  const query = { active: true, currentWindow: true };
   const PRStatus = event.currentTarget.checked
     ? REVIEW_STARTED
     : REVIEW_STOPPED;
@@ -44,22 +46,17 @@ checkbox.addEventListener("change", (event) => {
       eventType: EVENT_TYPE_STATUS_CHANGE,
     });
   }
-  chrome.tabs.query(query, callback);
+  extensionWindow.tabs.query(activeWindowQueryParams, callback);
 });
 
-extensionWindow.tabs.query(
-  { currentWindow: true, active: true },
-  function (tabs) {
-    const url = tabs[0].url;
-    const splitUrl = url.split("/").reverse();
-    // Execute logic only for PR pages.
-    if (splitUrl[1] === "pull") {
-      const key = `${splitUrl[2]}/${splitUrl[0]}`;
-      extensionWindow.storage.sync.get([key], function (result) {
-        showToggle(result[key]);
-      });
-    } else {
-      hideToggle();
-    }
+extensionWindow.tabs.query(activeWindowQueryParams, function (tabs) {
+  const key = getPRPath(tabs[0].url);
+  // Execute logic only for PR pages.
+  if (key) {
+    extensionWindow.storage.sync.get([key], function (result) {
+      showToggle(result[key]);
+    });
+  } else {
+    hideToggle();
   }
-);
+});
