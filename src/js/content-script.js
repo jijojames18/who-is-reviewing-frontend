@@ -10,7 +10,7 @@ import {
   DOM_ELEMENT_SELECTORS,
 } from "@js/common/constants";
 import extensionWindow from "@js/common/context";
-import { getPRPath, getUserLogin } from "@js/common/functions";
+import { getPRPath, getUserLogin, getFilesUrl } from "@js/common/functions";
 
 const path = getPRPath(document.URL);
 
@@ -42,6 +42,15 @@ class ContentScript {
     }
 
     return newData;
+  }
+
+  // Disable link for 'Files' page if user is not reviewing
+  toggleChangesPageVisibility() {
+    const hrefUrl = getFilesUrl(document.URL);
+    const elem = document.querySelectorAll(`a[href$='${hrefUrl}']`);
+    for (let i = 0; i < elem.length; i++) {
+      elem[i].style.pointerEvents = this.amIReviewing ? "" : "none";
+    }
   }
 
   drawReviewerList() {
@@ -86,8 +95,10 @@ class ContentScript {
           this.userList = msg.userList;
           this.amIReviewing = this.userList.indexOf(this.userLogin) >= 0;
           this.drawReviewerList();
+          this.toggleChangesPageVisibility();
         } else {
           this.drawReviewerList([]);
+          this.toggleChangesPageVisibility();
         }
         this.updateStorage({
           status: "OPEN",
