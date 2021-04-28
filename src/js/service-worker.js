@@ -36,6 +36,11 @@ const postData = (url, body) => {
     }));
 };
 
+const postMesageAndDisconnect = (port, message) => {
+  port.postMessage(message);
+  port.disconnect();
+};
+
 extensionWindow.runtime.onConnect.addListener(function (port) {
   if (port.name === PORT_NAME) {
     port.onMessage.addListener(function (msg) {
@@ -43,20 +48,18 @@ extensionWindow.runtime.onConnect.addListener(function (port) {
       const url = `${config.restEndPoint}/${project}/${prId}`;
       switch (eventType) {
         case EVENT_TYPE_GET:
-          fetchData(url).then((response) => {
-            port.postMessage(response);
-            port.disconnect();
-          });
+          fetchData(url).then((response) =>
+            postMesageAndDisconnect(port, response)
+          );
           break;
         case EVENT_TYPE_POST:
           const postBody = {
             userId: msg.userId,
             status: msg.status,
           };
-          postData(url, postBody).then((response) => {
-            port.postMessage(response);
-            port.disconnect();
-          });
+          postData(url, postBody).then((response) =>
+            postMesageAndDisconnect(port, response)
+          );
           break;
         case EVENT_TYPE_DELETE:
           fetch(url, {
