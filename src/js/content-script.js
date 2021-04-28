@@ -100,20 +100,27 @@ class ContentScript {
 // Execute logic only for PR pages.
 if (path) {
   // Get login of user
-  const userLogin = getUserLogin(document.getElementsByTagName("meta"));
-  const contentScript = new ContentScript(userLogin, path, config);
-  contentScript.callServiceWorker({
-    eventType: EVENT_TYPE_GET,
-  });
+  const headerElement = document.getElementById("partial-discussion-header");
+  // Enable only for open PR
+  if (
+    headerElement &&
+    headerElement.querySelectorAll(".State--open").length > 0
+  ) {
+    const userLogin = getUserLogin(document.getElementsByTagName("meta"));
+    const contentScript = new ContentScript(userLogin, path, config);
+    contentScript.callServiceWorker({
+      eventType: EVENT_TYPE_GET,
+    });
 
-  extensionWindow.runtime.onMessage.addListener(async (event) => {
-    // Update list when current user toggles status in Popup
-    if (event.eventType === EVENT_TYPE_STATUS_CHANGE) {
-      contentScript.callServiceWorker({
-        eventType: EVENT_TYPE_POST,
-        userId: userLogin,
-        status: event.status,
-      });
-    }
-  });
+    extensionWindow.runtime.onMessage.addListener(async (event) => {
+      // Update list when current user toggles status in Popup
+      if (event.eventType === EVENT_TYPE_STATUS_CHANGE) {
+        contentScript.callServiceWorker({
+          eventType: EVENT_TYPE_POST,
+          userId: userLogin,
+          status: event.status,
+        });
+      }
+    });
+  }
 }
