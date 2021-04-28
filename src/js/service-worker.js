@@ -44,8 +44,8 @@ const postMesageAndDisconnect = (port, message) => {
 extensionWindow.runtime.onConnect.addListener(function (port) {
   if (port.name === PORT_NAME) {
     port.onMessage.addListener(function (msg) {
-      const { project, prId, eventType } = msg;
-      const url = `${config.restEndPoint}/${project}/${prId}`;
+      const { path, eventType } = msg;
+      const url = `${config.restEndPoint}/${path}`;
       switch (eventType) {
         case EVENT_TYPE_GET:
           fetchData(url).then((response) =>

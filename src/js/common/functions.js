@@ -10,3 +10,12 @@ export const getPRPath = (url) => {
   }
   return "";
 };
+
+export const getUserLogin = (metas) => {
+  for (let i = 0; i < metas.length; i++) {
+    if (metas[i].getAttribute("name") === "user-login") {
+      return metas[i].getAttribute("content");
+    }
+  }
+  return "";
+};
