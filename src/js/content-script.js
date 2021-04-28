@@ -7,6 +7,7 @@ import {
   EVENT_TYPE_STATUS_CHANGE,
   STATUS_OK,
   STORAGE_KEY,
+  DOM_ELEMENT_SELECTORS,
 } from "@js/common/constants";
 import extensionWindow from "@js/common/context";
 import { getPRPath, getUserLogin } from "@js/common/functions";
@@ -44,12 +45,9 @@ class ContentScript {
   }
 
   drawReviewerList() {
-    const CONTAINER_TO_APPEND_TO = ".js-merge-message-container";
-    const CONTAINER_ELEM_CLASS = "who-is-reviewing-user-list";
-
     // Remove any existing elements
     const existingUserListElem = document.querySelectorAll(
-      `.${CONTAINER_ELEM_CLASS}`
+      `.${DOM_ELEMENT_SELECTORS.userList.containerElement}`
     );
     for (let i = 0; i < existingUserListElem.length; i++) {
       existingUserListElem[i].remove();
@@ -64,10 +62,14 @@ class ContentScript {
       userListText
     );
 
-    const containerElem = document.querySelectorAll(CONTAINER_TO_APPEND_TO);
+    const containerElem = document.querySelectorAll(
+      DOM_ELEMENT_SELECTORS.userList.containerToAppendTo
+    );
     if (containerElem.length === 1) {
       const userListContainerElem = document.createElement("div");
-      userListContainerElem.classList.add(CONTAINER_ELEM_CLASS);
+      userListContainerElem.classList.add(
+        DOM_ELEMENT_SELECTORS.userList.containerElement
+      );
       userListContainerElem.prepend(userListTextMessage);
       // Append the element to DOM.
       containerElem[0].prepend(userListContainerElem);
@@ -100,11 +102,14 @@ class ContentScript {
 // Execute logic only for PR pages.
 if (path) {
   // Get login of user
-  const headerElement = document.getElementById("partial-discussion-header");
+  const headerElement = document.getElementById(
+    DOM_ELEMENT_SELECTORS.pullRequest.header
+  );
   // Enable only for open PR
   if (
     headerElement &&
-    headerElement.querySelectorAll(".State--open").length > 0
+    headerElement.querySelectorAll(DOM_ELEMENT_SELECTORS.pullRequest.open)
+      .length > 0
   ) {
     const userLogin = getUserLogin(document.getElementsByTagName("meta"));
     const contentScript = new ContentScript(userLogin, path, config);
