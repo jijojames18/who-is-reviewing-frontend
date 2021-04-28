@@ -6,6 +6,7 @@ import {
   EVENT_TYPE_POST,
   EVENT_TYPE_STATUS_CHANGE,
   STATUS_OK,
+  STORAGE_KEY,
 } from "@js/common/constants";
 import extensionWindow from "@js/common/context";
 import { getPRPath, getUserLogin } from "@js/common/functions";
@@ -17,6 +18,29 @@ class ContentScript {
     this.userLogin = userLogin;
     this.path = path;
     this.config = config;
+  }
+
+  updateStorage(params) {
+    extensionWindow.storage.sync.get([STORAGE_KEY], (result) => {
+      let store = result[STORAGE_KEY] || {};
+      store = this.removeOldStoreData(store);
+      store[this.path] = params;
+      extensionWindow.storage.sync.set({
+        [STORAGE_KEY]: store,
+      });
+    });
+  }
+
+  removeOldStoreData(data) {
+    let newData = {};
+    const timestampLimit = new Date().getTime() - 86400 * 1000; // Remove data older than 1 day
+    for (let path in data) {
+      if (data[path].timestamp > timestampLimit) {
+        newData[path] = data[path];
+      }
+    }
+
+    return newData;
   }
 
   drawReviewerList() {
@@ -63,12 +87,10 @@ class ContentScript {
         } else {
           this.drawReviewerList([]);
         }
-        extensionWindow.storage.sync.set({
-          [path]: {
-            status: "OPEN",
-            amIReviewing: this.amIReviewing,
-            timestamp: new Date().getTime(),
-          },
+        this.updateStorage({
+          status: "OPEN",
+          amIReviewing: this.amIReviewing,
+          timestamp: new Date().getTime(),
         });
       }.bind(this)
     );

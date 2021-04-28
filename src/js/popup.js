@@ -4,6 +4,7 @@ import {
   REVIEW_STARTED,
   REVIEW_STOPPED,
   PR_OPEN,
+  STORAGE_KEY,
 } from "@js/common/constants";
 import config from "@/config";
 import extensionWindow from "@js/common/context";
@@ -54,11 +55,11 @@ extensionWindow.tabs.query(activeWindowQueryParams, function (tabs) {
   const key = getPRPath(tabs[0].url);
   // Execute logic only for PR pages.
   if (key) {
-    extensionWindow.storage.sync.get([key], function (result) {
-      const PRStatus = result[key] || {};
+    extensionWindow.storage.sync.get([STORAGE_KEY], function (result) {
+      const store = result[STORAGE_KEY] || {};
       // Hide popup content for closed pull requests
-      if (PRStatus.status === PR_OPEN) {
-        showToggle(PRStatus.amIReviewing);
+      if (store[key] && store[key].status === PR_OPEN) {
+        showToggle(store[key].amIReviewing);
       } else {
         hideToggle();
       }

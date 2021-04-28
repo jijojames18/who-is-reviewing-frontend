@@ -15,3 +15,5 @@ export const REVIEW_STOPPED = "STOPPED";
 
 export const PR_OPEN = "OPEN";
 export const PR_CLOSED = "CLOSED";
+
+export const STORAGE_KEY = "who_is_reviewing";
