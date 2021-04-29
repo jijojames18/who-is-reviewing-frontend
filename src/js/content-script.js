@@ -8,6 +8,7 @@ import {
   STATUS_OK,
   STORAGE_KEY,
   DOM_ELEMENT_SELECTORS,
+  EVENT_TYPE_USER_NAVIGATION,
 } from "@js/common/constants";
 import extensionWindow from "@js/common/context";
 import { getPRPath, getUserLogin, getFilesUrl } from "@js/common/functions";
@@ -20,10 +21,18 @@ class ContentScript {
     this.path = path;
     this.config = config;
     this.isLoading = false;
+    this.userList = [];
   }
 
   getIsLoading() {
     return this.isLoading;
+  }
+
+  getDetailsFromStorage() {
+    return extensionWindow.storage.sync.get([STORAGE_KEY], (result) => {
+      let store = result[STORAGE_KEY] || {};
+      return store[this.path];
+    });
   }
 
   updateStorage(params) {
@@ -108,7 +117,7 @@ class ContentScript {
           this.drawReviewerList();
           this.toggleChangesPageVisibility();
         } else {
-          this.drawReviewerList([]);
+          this.drawReviewerList();
           this.toggleChangesPageVisibility();
         }
         this.updateStorage({
@@ -148,6 +157,14 @@ if (path) {
           userId: userLogin,
           status: event.status,
         });
+      } else if (
+        event.eventType === EVENT_TYPE_USER_NAVIGATION &&
+        contentScript.getIsLoading() === false
+      ) {
+        setTimeout(() => {
+          contentScript.drawReviewerList();
+          contentScript.toggleChangesPageVisibility();
+        }, 3000);
       }
     });
   }

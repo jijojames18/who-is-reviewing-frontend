@@ -76,9 +76,9 @@ extensionWindow.runtime.onConnect.addListener(function (port) {
 
 extensionWindow.tabs.onUpdated.addListener(function (tabId, changeInfo) {
   // User navigated to a PR
-  if (changeInfo.url && isMainPrPage(changeInfo.url) !== "") {
+  if (changeInfo.url && isMainPrPage(changeInfo.url) === true) {
     extensionWindow.tabs.sendMessage(tabId, {
-      event: EVENT_TYPE_USER_NAVIGATION,
+      eventType: EVENT_TYPE_USER_NAVIGATION,
     });
   }
 });
