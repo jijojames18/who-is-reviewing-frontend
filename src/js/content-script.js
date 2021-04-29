@@ -19,6 +19,11 @@ class ContentScript {
     this.userLogin = userLogin;
     this.path = path;
     this.config = config;
+    this.isLoading = false;
+  }
+
+  getIsLoading() {
+    return this.isLoading;
   }
 
   updateStorage(params) {
@@ -91,6 +96,7 @@ class ContentScript {
   }
 
   callServiceWorker(params) {
+    this.isLoading = true;
     var port = extensionWindow.runtime.connect({ name: PORT_NAME });
     port.postMessage({ path: this.path, ...params });
     port.onMessage.addListener(
@@ -110,6 +116,7 @@ class ContentScript {
           amIReviewing: this.amIReviewing,
           timestamp: new Date().getTime(),
         });
+        this.isLoading = false;
       }.bind(this)
     );
   }
