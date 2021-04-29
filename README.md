@@ -22,6 +22,7 @@ Copy config.sample.js as config.js.
 | restEndPoint | String | Server base URL | http://localhost:8000 |
 | msg | Object | | |
 | msg.userList | String | Message to indicate the list of users reviewing the PR | List of reviewing users : {USER_LIST} |
+| msg.noActiveReviewers | String | Message to shown when there are no active reviewers | No one is currently reviewing this pull request. |
 | msg.toggleMessage | String | Toggle message used in Popup | Are you reviewing this pull request? |
 | msg.toggleYes | String | Message to indicate I am reviewing this pull request | Yes |
 | msg.toggleNo | String | Message to indicate I am not reviewing this pull request | No |
