@@ -7,8 +7,10 @@ import {
   EVENT_TYPE_GET,
   EVENT_TYPE_POST,
   EVENT_TYPE_DELETE,
+  EVENT_TYPE_USER_NAVIGATION,
 } from "@js/common/constants";
 import extensionWindow from "@js/common/context";
+import { isMainPrPage } from "@js/common/functions";
 
 const fetchData = (url) => {
   return fetch(url)
@@ -68,6 +70,15 @@ extensionWindow.runtime.onConnect.addListener(function (port) {
           port.disconnect();
           break;
       }
+    });
+  }
+});
+
+extensionWindow.tabs.onUpdated.addListener(function (tabId, changeInfo) {
+  // User navigated to a PR
+  if (changeInfo.url && isMainPrPage(changeInfo.url) !== "") {
+    extensionWindow.tabs.sendMessage(tabId, {
+      event: EVENT_TYPE_USER_NAVIGATION,
     });
   }
 });

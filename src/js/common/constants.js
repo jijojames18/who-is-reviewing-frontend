@@ -9,6 +9,7 @@ export const EVENT_TYPE_GET = "GET";
 export const EVENT_TYPE_POST = "POST";
 export const EVENT_TYPE_DELETE = "DELETE";
 export const EVENT_TYPE_STATUS_CHANGE = "STATUS_CHANGE";
+export const EVENT_TYPE_USER_NAVIGATION = "USER_NAVIGATION";
 
 export const REVIEW_STARTED = "STARTED";
 export const REVIEW_STOPPED = "STOPPED";

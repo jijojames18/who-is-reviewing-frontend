@@ -11,6 +11,11 @@ export const getPRPath = (url) => {
   return "";
 };
 
+export const isMainPrPage = (url) => {
+  const splitUrl = url.split("/").reverse();
+  return splitUrl[1] === "pull";
+};
+
 export const getFilesUrl = (url) => {
   const splitUrl = url.split("/").reverse();
   if (splitUrl[1] === "pull") {
