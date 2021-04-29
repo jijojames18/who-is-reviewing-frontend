@@ -46,3 +46,4 @@ Watches for changes to the `src` folder and builds the project when changes happ
 
 - [Getting started](https://developer.chrome.com/docs/extensions/mv3/getstarted/)
 - [Extensions Architecture](https://developer.chrome.com/docs/extensions/mv3/architecture-overview/)
+- 
