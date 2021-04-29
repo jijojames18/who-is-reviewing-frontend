@@ -62,20 +62,25 @@ class ContentScript {
       existingUserListElem[i].remove();
     }
 
-    let userListText = "";
-    for (let i = 0; i < this.userList.length; i++) {
-      userListText += ` ${this.userList[i]} `;
+    let userListTextMessage = "";
+    if (this.userList.length === 0) {
+      userListTextMessage = this.config.msg.noActiveReviewers;
+    } else {
+      let userListText = "";
+      for (let i = 0; i < this.userList.length; i++) {
+        userListText += ` ${this.userList[i]} `;
+      }
+      userListTextMessage = this.config.msg.userList.replace(
+        "{USER_LIST}",
+        userListText
+      );
     }
-    const userListTextMessage = this.config.msg.userList.replace(
-      "{USER_LIST}",
-      userListText
-    );
 
     const containerElem = document.querySelectorAll(
       DOM_ELEMENT_SELECTORS.userList.containerToAppendTo
     );
     if (containerElem.length === 1) {
-      const userListContainerElem = document.createElement("div");
+      const userListContainerElem = document.createElement("h3");
       userListContainerElem.classList.add(
         DOM_ELEMENT_SELECTORS.userList.containerElement
       );
