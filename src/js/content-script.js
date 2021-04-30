@@ -11,9 +11,13 @@ import {
   EVENT_TYPE_USER_NAVIGATION,
 } from "@js/common/constants";
 import extensionWindow from "@js/common/context";
-import { getPRPath, getUserLogin, getFilesUrl } from "@js/common/functions";
+import {
+  getAPIPath,
+  getUserLoginFromMeta,
+  getFilesPageUrl,
+} from "@js/common/functions";
 
-const path = getPRPath(document.URL);
+const path = getAPIPath(document.URL);
 
 class ContentScript {
   constructor(userLogin, path, config) {
@@ -58,9 +62,12 @@ class ContentScript {
     return newData;
   }
 
-  // Disable link for 'Files' page if user is not reviewing
+  /**
+   * Disable link for 'Files(Code changes)' page if user is not reviewing.
+   * This is mainly done so that user doesn't forget to indicate whether they are reviewing or not.
+   */
   toggleChangesPageVisibility() {
-    const hrefUrl = getFilesUrl(document.URL);
+    const hrefUrl = getFilesPageUrl(document.URL);
     const elem = document.querySelectorAll(`a[href$='${hrefUrl}']`);
     for (let i = 0; i < elem.length; i++) {
       elem[i].style.pointerEvents = this.amIReviewing ? "" : "none";
@@ -114,12 +121,10 @@ class ContentScript {
         if (msg.status === STATUS_OK) {
           this.userList = msg.userList;
           this.amIReviewing = this.userList.indexOf(this.userLogin) >= 0;
-          this.drawReviewerList();
-          this.toggleChangesPageVisibility();
-        } else {
-          this.drawReviewerList();
-          this.toggleChangesPageVisibility();
         }
+        this.drawReviewerList();
+        this.toggleChangesPageVisibility();
+        // Set data in storage. This is then used by popup to set the current state of toggle button.
         this.updateStorage({
           status: "OPEN",
           amIReviewing: this.amIReviewing,
@@ -143,15 +148,17 @@ if (path) {
     headerElement.querySelectorAll(DOM_ELEMENT_SELECTORS.pullRequest.open)
       .length > 0
   ) {
-    const userLogin = getUserLogin(document.getElementsByTagName("meta"));
+    const userLogin = getUserLoginFromMeta(
+      document.getElementsByTagName("meta")
+    );
     const contentScript = new ContentScript(userLogin, path, config);
     contentScript.callServiceWorker({
       eventType: EVENT_TYPE_GET,
     });
 
     extensionWindow.runtime.onMessage.addListener(async (event) => {
-      // Update list when current user toggles status in Popup
       if (event.eventType === EVENT_TYPE_STATUS_CHANGE) {
+        // Update list when current user toggles status in Popup
         contentScript.callServiceWorker({
           eventType: EVENT_TYPE_POST,
           userId: userLogin,
@@ -161,6 +168,8 @@ if (path) {
         event.eventType === EVENT_TYPE_USER_NAVIGATION &&
         contentScript.getIsLoading() === false
       ) {
+        // Add the message when only redraw of page when happens after navigation
+        // Timeout of 3 secs added so that the DOM element is added only after main page is redrawn.
         setTimeout(() => {
           contentScript.drawReviewerList();
           contentScript.toggleChangesPageVisibility();

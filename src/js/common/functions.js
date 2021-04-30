@@ -1,5 +1,5 @@
 // Helper functions
-export const getPRPath = (url) => {
+export const getAPIPath = (url) => {
   const splitUrl = url.split("/").reverse();
   if (splitUrl[1] === "pull") {
     // Conversation page
@@ -11,12 +11,12 @@ export const getPRPath = (url) => {
   return "";
 };
 
-export const isMainPrPage = (url) => {
+export const isConversationPage = (url) => {
   const splitUrl = url.split("/").reverse();
   return splitUrl[1] === "pull";
 };
 
-export const getFilesUrl = (url) => {
+export const getFilesPageUrl = (url) => {
   const splitUrl = url.split("/").reverse();
   if (splitUrl[1] === "pull") {
     // Conversation page
@@ -28,7 +28,7 @@ export const getFilesUrl = (url) => {
   return "";
 };
 
-export const getUserLogin = (metas) => {
+export const getUserLoginFromMeta = (metas) => {
   for (let i = 0; i < metas.length; i++) {
     if (metas[i].getAttribute("name") === "user-login") {
       return metas[i].getAttribute("content");

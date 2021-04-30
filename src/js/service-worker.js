@@ -10,7 +10,7 @@ import {
   EVENT_TYPE_USER_NAVIGATION,
 } from "@js/common/constants";
 import extensionWindow from "@js/common/context";
-import { isMainPrPage } from "@js/common/functions";
+import { isConversationPage } from "@js/common/functions";
 
 const fetchData = (url) => {
   return fetch(url)
@@ -74,9 +74,15 @@ extensionWindow.runtime.onConnect.addListener(function (port) {
   }
 });
 
+/**
+ * Raise a navigation event when user changes the url.
+ * Scenario : When user navigates from 'commits' page to 'conversation' page, eventhough the
+ * document location changes, the page is only redrawn and hence, we need to tell the content script
+ * to draw our message after the redraw happens
+ */
 extensionWindow.tabs.onUpdated.addListener(function (tabId, changeInfo) {
   // User navigated to a PR
-  if (changeInfo.url && isMainPrPage(changeInfo.url) === true) {
+  if (changeInfo.url && isConversationPage(changeInfo.url) === true) {
     extensionWindow.tabs.sendMessage(tabId, {
       eventType: EVENT_TYPE_USER_NAVIGATION,
     });

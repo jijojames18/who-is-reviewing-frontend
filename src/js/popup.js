@@ -8,7 +8,7 @@ import {
 } from "@js/common/constants";
 import config from "@/config";
 import extensionWindow from "@js/common/context";
-import { getPRPath } from "@js/common/functions";
+import { getAPIPath } from "@js/common/functions";
 
 import "@css/popup.css";
 
@@ -52,7 +52,7 @@ checkbox.addEventListener("change", (event) => {
 });
 
 extensionWindow.tabs.query(activeWindowQueryParams, function (tabs) {
-  const key = getPRPath(tabs[0].url);
+  const key = getAPIPath(tabs[0].url);
   // Execute logic only for PR pages.
   if (key) {
     extensionWindow.storage.sync.get([STORAGE_KEY], function (result) {
